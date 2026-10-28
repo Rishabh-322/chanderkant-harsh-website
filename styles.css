@@ -1295,8 +1295,8 @@ em{ color:var(--pink-soft); font-style:normal; }
 .workshop-modal-backdrop{
   position:absolute; inset:0;
   background:rgba(12,7,25,.8);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
 }
 .workshop-modal-dialog{
   position:relative; z-index:1;
@@ -1307,7 +1307,7 @@ em{ color:var(--pink-soft); font-style:normal; }
   background:linear-gradient(148deg,#352153 0%,#241538 73%,#1D122F 100%);
   color:var(--ink-d);
   box-shadow:0 42px 120px rgba(0,0,0,.66),0 0 55px rgba(140,92,224,.15);
-  animation:workshop-dialog-enter .48s cubic-bezier(.2,.75,.2,1) both;
+  animation:workshop-dialog-enter .26s cubic-bezier(.2,.75,.2,1) both;
 }
 @keyframes workshop-dialog-enter{
   from{ transform:translateY(18px) scale(.965); opacity:0; }
@@ -1413,3 +1413,7 @@ button[data-workshop-open]:focus-visible{ outline:3px solid var(--gold-soft); ou
   .workshop-modal-dialog{ animation:none; }
   .workshop-modal-close{ transition:none; }
 }
+
+/* Optimized picture sources preserve the poster's original card and modal layout. */
+.event-poster-frame picture{ display:block; width:100%; height:100%; }
+.workshop-modal-art picture{ display:block; width:100%; height:100%; min-height:0; }

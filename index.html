@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="preload" as="image" href="assets/event-poster-seven-day-workshop.webp" type="image/webp" fetchpriority="high">
+<link rel="stylesheet" href="styles.css?v=20261028-2">
 </head>
 <body>
 
@@ -448,7 +449,10 @@
 
       <div class="event-featured reveal">
         <div class="event-featured-media event-poster-frame">
-          <img class="event-poster" src="assets/event-poster-seven-day-workshop.jpg" alt="Third Eye and 7 Chakra Activation Workshop: 7-day offline guided program, one hour each day, for ages 5 to 18" loading="lazy">
+          <picture>
+            <source srcset="assets/event-poster-seven-day-workshop.webp" type="image/webp">
+            <img class="event-poster" src="assets/event-poster-seven-day-workshop.jpg" alt="Third Eye and 7 Chakra Activation Workshop: 7-day offline guided program, one hour each day, for ages 5 to 18" width="1080" height="1350" loading="lazy" decoding="async">
+          </picture>
           <span class="event-tag">Featured Workshop</span>
         </div>
         <div class="event-featured-body">
@@ -761,7 +765,10 @@
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     </button>
     <div class="workshop-modal-art">
-      <img src="assets/event-poster-seven-day-workshop.jpg" alt="Poster for the Third Eye and 7 Chakra Activation Workshop" width="1080" height="1350">
+      <picture>
+        <source srcset="assets/event-poster-seven-day-workshop.webp" type="image/webp">
+        <img src="assets/event-poster-seven-day-workshop.jpg" alt="Poster for the Third Eye and 7 Chakra Activation Workshop" width="1080" height="1350" fetchpriority="high" decoding="async">
+      </picture>
     </div>
     <div class="workshop-modal-content">
       <span class="workshop-modal-kicker"><span aria-hidden="true">✦</span> A NEW JOURNEY AWAITS</span>
@@ -781,6 +788,74 @@
     </div>
   </section>
 </div>
+
+
+<!-- Standalone, fast workshop controller: intentionally runs on EVERY page load. -->
+<script>
+(function () {
+  "use strict";
+  var modal = document.getElementById("workshopModal");
+  if (!modal) return;
+
+  var dialog = modal.querySelector(".workshop-modal-dialog");
+  var closeButton = modal.querySelector(".workshop-modal-close");
+  var previousFocus = null;
+  var previousOverflow = "";
+
+  function openWorkshopModal() {
+    if (!modal.hidden) return;
+    previousFocus = document.activeElement;
+    previousOverflow = document.body.style.overflow;
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    if (closeButton) closeButton.focus({preventScroll: true});
+  }
+
+  function closeWorkshopModal() {
+    if (modal.hidden) return;
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = previousOverflow;
+    if (previousFocus && previousFocus !== document.body && previousFocus.isConnected) {
+      previousFocus.focus({preventScroll: true});
+    }
+  }
+
+  document.querySelectorAll("[data-workshop-open]").forEach(function (trigger) {
+    trigger.addEventListener("click", openWorkshopModal);
+  });
+  modal.querySelectorAll("[data-workshop-close], [data-workshop-action]").forEach(function (control) {
+    control.addEventListener("click", closeWorkshopModal);
+  });
+  document.addEventListener("keydown", function (event) {
+    if (modal.hidden) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeWorkshopModal();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    var controls = Array.from(dialog.querySelectorAll('a[href], button:not([disabled])'));
+    if (!controls.length) { event.preventDefault(); dialog.focus(); return; }
+    var first = controls[0];
+    var last = controls[controls.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault(); last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault(); first.focus();
+    }
+  });
+
+  // Display on every visit, refresh and deep link, without storage or scroll checks.
+  // One animation frame lets the page paint first; there is no artificial delay.
+  if (window.requestAnimationFrame) {
+    window.requestAnimationFrame(openWorkshopModal);
+  } else {
+    openWorkshopModal();
+  }
+})();
+</script>
 
 <!-- ============ FOOTER ============ -->
 <footer class="site-footer" id="contact">
@@ -866,6 +941,6 @@
 </button>
 
 <script async src="https://www.instagram.com/embed.js"></script>
-<script src="script.js"></script>
+<script src="script.js?v=20261028-2"></script>
 </body>
 </html>
